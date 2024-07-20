@@ -21,7 +21,7 @@ This repository contains a Python script that sets up anti-DDoS protection for a
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/Zalgo33/Anti-ddos-script.git
+    git clone https://github.com/Zalgoo/Anti-ddos-script.git
     cd Anti-ddos-script
     ```
 
