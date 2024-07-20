@@ -7,16 +7,16 @@ def run_command(command):
     stdout, stderr = process.communicate()
     return stdout, stderr
 
-# Mettre à jour les paquets
-print("Mise à jour des paquets...")
+# Update packages
+print("Updating packages...")
 run_command("sudo apt update && sudo apt upgrade -y")
 
-# Installer iptables et fail2ban
-print("Installation de iptables et fail2ban...")
+# Install iptables and fail2ban
+print("Installing iptables and fail2ban...")
 run_command("sudo apt install -y iptables-persistent fail2ban ufw")
 
-# Configurer iptables pour limiter les connexions
-print("Configuration d'iptables...")
+# Configure iptables to limit connections
+print("Configuring iptables...")
 commands = [
     "sudo iptables -F",
     "sudo iptables -X",
@@ -32,17 +32,17 @@ commands = [
 for command in commands:
     run_command(command)
 
-# Créer une configuration personnalisée pour fail2ban
-print("Configuration de fail2ban...")
+# Create a custom configuration for fail2ban
+print("Configuring fail2ban...")
 jail_local = """
 [DEFAULT]
-# Bannir une IP pendant 24 heures
+# Ban an IP for 24 hours
 bantime = 86400
 
-# Nombre de tentatives avant bannissement
+# Number of attempts before banning
 maxretry = 3
 
-# Bloquer toutes les connexions de l'IP bannie
+# Block all connections from the banned IP
 banaction = iptables-multiport
 
 [sshd]
@@ -71,26 +71,26 @@ with open("/etc/fail2ban/filter.d/http-get-dos.conf", "w") as file:
 
 run_command("sudo systemctl restart fail2ban")
 
-# Ajouter des optimisations réseau à /etc/sysctl.conf
-print("Optimisation des paramètres réseau...")
+# Add network optimizations to /etc/sysctl.conf
+print("Optimizing network settings...")
 sysctl_conf = """
-# Protection contre les SYN flood
+# Protection against SYN flood
 net.ipv4.tcp_syncookies = 1
 
-# Protection contre les attaques de type "source routing"
+# Protection against source routing attacks
 net.ipv4.conf.all.accept_source_route = 0
 net.ipv6.conf.all.accept_source_route = 0
 
-# Ignorer les paquets ICMP echo (ping)
+# Ignore ICMP echo requests (ping)
 net.ipv4.icmp_echo_ignore_all = 1
 
-# Augmenter la taille de la file d'attente
+# Increase the size of the queue
 net.core.netdev_max_backlog = 5000
 
-# Limiter les connexions TCP incomplètes
+# Limit incomplete TCP connections
 net.ipv4.tcp_max_syn_backlog = 2048
 
-# Activer la protection contre les attaques IP spoofing
+# Enable protection against IP spoofing attacks
 net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
 """
@@ -100,8 +100,8 @@ with open("/etc/sysctl.conf", "a") as file:
 
 run_command("sudo sysctl -p")
 
-# Activer ufw avec les règles par défaut
-print("Configuration de ufw...")
+# Enable ufw with default rules
+print("Configuring ufw...")
 commands = [
     "sudo ufw default deny incoming",
     "sudo ufw default allow outgoing",
@@ -113,4 +113,4 @@ commands = [
 for command in commands:
     run_command(command)
 
-print("Configuration anti-DDoS appliquée avec succès.")
+print("Anti-DDoS configuration applied successfully.")
