@@ -1,84 +1,109 @@
-# Anti-DDoS Script for Ubuntu 22.04
+# 🔒 Script Anti-DDoS
 
-This repository contains a Python script that sets up anti-DDoS protection for a web server running on Ubuntu 22.04. The script configures `iptables`, `fail2ban`, and `ufw` to help mitigate DDoS attacks and optimize network settings for better performance.
+Script Python pour renforcer la sécurité d'un serveur Linux contre les attaques DDoS et les intrusions.
 
-## Features
+---
 
-- Updates and upgrades system packages
-- Installs necessary tools: `iptables-persistent`, `fail2ban`, and `ufw`
-- Configures `iptables` to limit incoming connections
-- Sets up `fail2ban` to block IP addresses with excessive requests
-- Optimizes network settings in `/etc/sysctl.conf`
-- Configures `ufw` (Uncomplicated Firewall) with default deny rules and allows necessary ports
+## 📋 Fonctionnalités
 
-## Requirements
+- 🛡️ Configuration automatique d'un pare-feu strict (`iptables` + `UFW`)
+- 🚫 Protection contre les attaques par force brute (`Fail2Ban`)
+- 🌐 Optimisation des paramètres réseau (`sysctl`)
+- ⚡ Protection contre SYN Flood, IP spoofing et connexions abusives
+- 🔄 Mise à jour automatique des paquets système
 
-- Ubuntu 22.04
-- Python 3
+---
 
-## Usage
+## 📦 Prérequis
 
-1. Clone the repository:
+- Système d'exploitation : Debian / Ubuntu
+- Python 3.x
+- Accès root (`sudo`)
 
-    ```bash
-    git clone https://github.com/Zalgoo/Anti-ddos-script.git
-    cd Anti-ddos-script
-    ```
+---
 
-2. Make the script executable:
+## 🚀 Installation & Utilisation
 
-    ```bash
-    chmod +x antiddos.py
-    ```
+1. Téléchargez le script :
 
-3. Run the script with sudo:
+```bash
+wget [https://github.com/Zalgo-Dev/Anti-ddos-script/blob/main/antiddos.py](https://github.com/Zalgo-Dev/Anti-ddos-script/blob/main/antiddos.py)
+```
 
-    ```bash
-    sudo python3 antiddos.py
-    ```
+2. Rendez-le exécutable :
 
-## Script Details
+```bash
+chmod +x antiddos.py
+```
 
-The script performs the following actions:
+3. Exécutez-le avec les droits root :
 
-1. **Updates System Packages**:
-    - Runs `apt update` and `apt upgrade` to ensure all packages are up to date.
+```bash
+sudo ./antiddos.py
+```
 
-2. **Installs Required Tools**:
-    - Installs `iptables-persistent` for saving iptables rules.
-    - Installs `fail2ban` for blocking IP addresses with suspicious activity.
-    - Installs `ufw` for managing firewall rules.
+---
 
-3. **Configures iptables**:
-    - Clears existing rules.
-    - Sets default policies.
-    - Allows loopback and established connections.
-    - Limits new connections to prevent flood attacks.
+## ⚙️ Configuration appliquée
 
-4. **Configures fail2ban**:
-    - Creates custom jail settings to monitor and ban IP addresses with too many requests.
-    - Sets up a filter to detect HTTP GET DoS attacks.
+### 🔥 Règles `iptables`
 
-5. **Optimizes Network Settings**:
-    - Adds network optimization settings to `/etc/sysctl.conf`.
+- Blocage par défaut du trafic entrant
+- Limitation des connexions TCP (10 max)
+- Rate limiting HTTP (25 requêtes/minute)
+- Autorisation uniquement des ports :  
+  - SSH (22)  
+  - HTTP (80)  
+  - HTTPS (443)
 
-6. **Configures ufw**:
-    - Sets default deny policy for incoming connections.
-    - Allows outgoing connections.
-    - Allows necessary ports for SSH, HTTP, and HTTPS.
+### 🛑 `Fail2Ban`
 
-## Customization
+- Bannissement des IP après **3 échecs SSH**
+- Protection contre les attaques HTTP DoS (100 reqs/minute)
+- Durée de bannissement :
+  - **24h** pour SSH
+  - **10 minutes** pour HTTP
 
-You can customize the script by editing the `antiddos.py` file. For example, you can adjust the connection limits, ban times, and other parameters to better suit your needs.
+### 🌐 Optimisations réseau
 
-## Contributing
+- Activation de la protection **SYN cookies**
+- Désactivation des requêtes ping (**ICMP**)
+- Prévention contre le **spoofing IP**
+- Augmentation des files d’attente réseau
 
-Contributions are welcome! Please fork this repository and submit a pull request for any improvements or bug fixes.
+---
 
-## License
+## ⚠️ Avertissements
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+Ce script **va** :
 
-## Author
+- Effacer toutes vos règles `iptables` existantes
+- Modifier des fichiers système critiques
+- Désactiver les requêtes ping
 
-Created by ZalgoDev.
+> **Testez toujours dans un environnement de développement avant déploiement en production.**  
+> **Sauvegardez vos configurations existantes :**
+
+```bash
+sudo iptables-save > ~/iptables_backup.rules
+sudo cp /etc/fail2ban/jail.local ~/jail.local.backup
+```
+
+---
+
+## 🔄 Restauration
+
+Pour annuler les changements :
+
+```bash
+sudo iptables-restore < ~/iptables_backup.rules
+sudo cp ~/jail.local.backup /etc/fail2ban/jail.local
+sudo sysctl -p /etc/sysctl.conf.bak
+sudo ufw disable
+```
+
+---
+
+## 📜 Licence
+
+MIT License - Libre d'utilisation et de modification.
