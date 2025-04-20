@@ -27,7 +27,7 @@ Script Python pour renforcer la sécurité d'un serveur Linux contre les attaque
 1. Téléchargez le script :
 
 ```bash
-wget [https://github.com/Zalgo-Dev/Anti-ddos-script/blob/main/antiddos.py](https://github.com/Zalgo-Dev/Anti-ddos-script/blob/main/antiddos.py)
+wget https://github.com/Zalgo-Dev/Anti-ddos-script/blob/main/antiddos.py
 ```
 
 2. Rendez-le exécutable :
